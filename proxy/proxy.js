@@ -33,17 +33,17 @@ function sendToRedis(key, value) {
 };
 
 const rule = {
-    // 模块介绍
+    // Module introduction
     summary: 'my customized rule for AnyProxy',
-    // 发送请求前拦截处理
+    // Intercept processing before sending a request
     *beforeSendRequest(requestDetail) {
-        // 每一请求的关键信息
+        // Key information for each request
         var data_needed = {}
         data_needed['protocol'] = requestDetail.protocol
         data_needed['url'] = requestDetail.url
         data_needed['requestOptions'] = requestDetail.requestOptions
         data_needed['requestData'] = requestDetail.requestData
-        // 请求的url感兴趣就保存本次请求的信息到文件中
+        // If the requested url is interested, save the information of this request to a file
         for (url in interest_url){
             if (requestDetail.url.includes(interest_url[url])){
                 var rd_buf = Buffer(requestDetail.requestData)
@@ -56,7 +56,7 @@ const rule = {
             }
         }
     },
-    // 发送响应前处理
+    // Send response before processing
     *beforeSendResponse(requestDetail, responseDetail) {
         if (requestDetail.url.includes(interest_url.getappmsgext)) {
             var body_str = responseDetail.response.body.toString('utf8')
@@ -106,7 +106,7 @@ const options = {
     },
     throttle: 10000,
     forceProxyHttps: true,
-    wsIntercept: false, // 不开启websocket代理
+    wsIntercept: false, // Do not enable websocket proxy
     silent: true
 };
 const proxyServer = new AnyProxy.ProxyServer(options);
