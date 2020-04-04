@@ -11,20 +11,20 @@ from crawler_assist.tidy_req_data import TidyReqData
 
 class WeixinOperate():
     """
-    实现对所有在线手机进行操作 以获取微信请求参数
+    Implement operations on all online phones to get WeChat request parameters
     """
     busy = 0
     def __init__(self, phone_list):
         self.oap = OperateAllPhone(phone_list)
-        self.home_weixin = {} #桌面微信位置
-        self.main_bottom = {} #微信主界面底部四大按钮位置
-        self.gzh_folder = {} #公众号文件夹位置
-        # 找一个手机的界面作为眼睛
+        self.home_weixin = {} #Desktop WeChat location
+        self.main_bottom = {} #Position of the four big buttons at the bottom of the WeChat main interface
+        self.gzh_folder = {} #Public account folder location
+        # Find a mobile phone interface as an eye
         self.vc = VC(phone_list[0])
 
     def home(self):
         """
-        :return:通过多次点击BACK按键回到主界面 之所以不直接点击HOME按键 是需要层层返回微信到主界面
+        :return:Click the BACK button multiple times to return to the main interface.Why not directly click the HOME button?
         """
         for i in range(7):
             self.oap.key(KEY['BACK_KEYEVENT'])
@@ -33,47 +33,47 @@ class WeixinOperate():
 
     def home_to_gzh_search(self):
         """
-        :return:从主界面到公众号搜索
+        :return:Search from the main interface to the public account
         """
-        # 点击微信图标
+        # Click on the WeChat icon
         self.oap.tap(BTN['EMU_WEIXIN_ICON'])
         time.sleep(0.5)
-        # 点击通信录
+        # Click on Contacts
         self.oap.tap(BTN['TONGXUNLU_BTN'])
         time.sleep(0.5)
-        # 点击公众号
+        # Click on the public number
         self.oap.tap(BTN['GZH_FOLDER'])
         time.sleep(0.5)
-        # 点击搜索
+        # Click search
         self.oap.tap(BTN['SEARCH_BTN'])
         time.sleep(1)
         return 0
 
     def search_gzh(self, nickname):
         """
-        :param nickname:待搜索公众号名称
+        :param nickname:Public name to be searched
         :return:
         """
-        # 输入拼音
+        # Enter pinyin
         self.oap.text(nickname)
         time.sleep(0.5)
-        # 进入账号
+        # Enter account
         self.oap.tap(BTN['FIRST_GZH_SEARCH_RESULT'])
         time.sleep(0.5)
-        #键入主界面
+        #Type the main interface
         self.oap.tap(BTN['PROFILE_BTN'])
         time.sleep(0.5)
-        # 上拉
+        # pull up
         self.oap.roll(0,500)
         time.sleep(0.5)
         return 0
 
     def all_message(self):
         """
-        :return:从公众号主页下拉点击全部消息消息
+        :return:From the public account home page, click and click All Messages.
         """
-        # 全部消息
-        all_message_pos = self.vc.click_by_words("全部消息",tap=False)
+        # All news
+        all_message_pos = self.vc.click_by_words("All news",tap=False)
         self.oap.tap(all_message_pos)
         time.sleep(5)
         self.oap.roll(0,500)
@@ -82,18 +82,18 @@ class WeixinOperate():
 
     def click_a_message(self, args=2):
         """
-        :return:来到历史列表之后随机点击一篇文章
+        :return:Randomly click on an article after coming to the history list
         """
-        #获取界面文章标题消息
+        #Get interface article title message
         if args==1:corp = CROP_RANGE['PROFILE_MESSAGE_LIST']
         elif args==2:corp = CROP_RANGE['MESSAGE_LIST']
         ui_words = self.vc.get_ui_words(location=True, crop=corp)
-        #随便点一个标题
+        #Just click on a title
         random_index = randint(1,len(ui_words))-1
         loc = ui_words[random_index]['location']
         pos = [loc['left'],loc['top'],loc['left']+loc['width'],loc['top']+loc['height']]
         self.oap.tap(pos)
-        #等待页面加载完毕
+        #Wait for the page to finish loading
         time.sleep(5)
         self.oap.roll(0,500)
         time.sleep(1)
@@ -101,27 +101,27 @@ class WeixinOperate():
 
     def check_comments(self):
         """
-        :return:成功打开一篇文章之后 拉到底检查评论信息
+        :return:After successfully opening an article, check the comment information
         """
-        # 拉到底
+        # Pull to the end
         for i in range(2):
             self.oap.roll(0,500)
             time.sleep(1)
         time.sleep(2)
-        # 检查有无评论 有评论 无评论 有广告 三种情况
+        # Check for comments There are comments There are no comments There are ads Three cases
         ui_words_str = self.vc.get_ui_words(location=False,in_str=True,crop=CROP_RANGE['LEAVE_MSG_BOTTOM'])
-        # 如果暂无评论点击了留言按钮
+        # If there is no comment, click the message button
         if UI_WORDS['NO_LEAVING_MSG'] in ui_words_str:
-            print('点击了留言信息。。。')
+            print('Clicked the message. . .')
             self.oap.tap(BTN['LEAVE_MSG'])
             time.sleep(1)
             self.oap.key(KEY['BACK_KEYEVENT'])
 
     def get_all_req_data(self, nickname, hand=False):
         """
-        获取关于一个公众号的全部请求数据 当前程序使用baidu API受到网络和并发限制效果并十分理想
-        :param nickname: 公众号昵称
-        :return:最后成功与否取决在redis中是否找到有有效数据
+        Get all the requested data about a public account. The current program uses Baidu API to be limited by the network and concurrency. The effect is very satisfactory.
+        :param nickname: Public name nickname
+        :return:The final success depends on whether valid data is found in redis
         """
         TidyReqData.flush_data("*.req")
         redis_instance.set('current_nickname',nickname)
@@ -132,14 +132,14 @@ class WeixinOperate():
             self.click_a_message()
             # self.check_comments()
         else:
-            input("请一一手动或取参数 回车退出")
+            input("Please manually or take parameters one by one")
         self.home()
 
     def get_part_req_data(self, nickname):
         """
-        仅获取阅读量和评论的请求数据
-        :param nickname:公众号昵称
-        :return:最后成功与否取决在redis中是否找到有有效数据
+        Request data for reads and comments only
+        :param nickname:Public name nickname
+        :return:The final success depends on whether valid data is found in redis
         """
         TidyReqData.flush_data()
         redis_instance.set('current_nickname',nickname)

@@ -5,19 +5,19 @@ from tools.utils import sub_list
 
 class GZHCategory():
     """
-    管理公众号分类 接受前端的消息对对数据进行组织并反馈结果给前端
+    Manage the classification of public numbersAccept front-end messages to organize data and feedback results to the front-end
     """
-    def __init__(self, queue_type='公众号分类'):
+    def __init__(self, queue_type='Public number classification'):
         self.queue_type = queue_type
 
     def get_all_cat_data(self):
         """
-        :return:返回当前的所有分类数据, 温和前端的数据格式
+        :return:Returns all current classification data, mild front-end data format
         """
         category = []
-        # 获得数据库中所有公众号的名称为添加选项做准备
+        # Get the names of all the public numbers in the database Prepare for adding options
         gzh_list = list(get_article_metadata().keys())
-        # 获得分类名称和该分类下的所有公众号
+        # Get the category name and all public numbers under that category
         queue = DBQ.get_queue_by_kv(queue_type=self.queue_type)
         for cat in queue:
             data = {}
@@ -25,7 +25,7 @@ class GZHCategory():
             data['cat_members'] = []
             for mem in cat['queue']:
                 data['cat_members'].append(mem['id'])
-            # 找出不在分类中的公众号作为待加入选项
+            # Find public numbers that are not in the category as options to be added
             # data['cat_available'] = [x for x in gzh_list if x not in data['cat_members']]
             data['cat_available'] = sub_list(gzh_list, data['cat_members'])
             category.append(data)
@@ -33,25 +33,25 @@ class GZHCategory():
 
     def add_cat(self, cat_name):
         """
-        :param cat_name:分类名称
-        :return: 添加一个分类
+        :param cat_name:Category Name
+        :return: Add a category
         """
         DBQ(cat_name,self.queue_type)
         return self.get_all_cat_data()
 
     def delete_cat(self, cat_name):
         """
-        :param cat_name: 分类名称
-        :return:删除一个分类
+        :param cat_name: Category Name
+        :return:Delete a category
         """
         DBQ.delete_queue(cat_name,self.queue_type)
         return self.get_all_cat_data()
 
     def add_cat_gzh(self, nickname, cat_name):
         """
-        :param nickname:公众号昵称
-        :param cat_name:分类名称
-        :return:在指定分类中增加一个公众号
+        :param nickname:Public name nickname
+        :param cat_name:Category Name
+        :return:Add a public number to the specified category
         """
         cat = DBQ(name=cat_name,queue_type=self.queue_type)
         cat.add_element({'id':nickname})
@@ -59,9 +59,9 @@ class GZHCategory():
 
     def delete_cat_gzh(self, nickname, cat_name):
         """
-        :param nickname:公众号昵称
-        :param cat_name: 分类名称
-        :return:从指定分类中删除一个公众号
+        :param nickname:Public name nickname
+        :param cat_name: Category Name
+        :return:Remove a public number from the specified category
         """
         cat = DBQ(name=cat_name,queue_type=self.queue_type)
         cat.delete_element({'id':nickname})

@@ -14,7 +14,7 @@ class CustomFlask(Flask):
     ))
 
 
-# 定义作为web服务器常用的公用实例对象 方便其余程序直接import
+# Define as a common instance object commonly used by web servers to facilitate direct import by other programs
 app = CustomFlask('WeixinCrawler',template_folder="./ui/templates",static_folder="./ui/static")
 # app = CustomFlask('WeixinCrawler',template_folder="./templates",static_folder="./static")
 app.config['SECRET_KEY'] = 'secret!'

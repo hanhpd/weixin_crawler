@@ -1,7 +1,7 @@
-# 全体公众号文章数据库
+# All public number article database
 from db import WeixinDB
 weixindb_instance = WeixinDB()
 
-# es index和搜相关
+# es index and search related
 from es import GZHSearch
 gs = GZHSearch()

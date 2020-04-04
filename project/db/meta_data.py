@@ -2,25 +2,26 @@ from instance import db_instance
 from copy import copy
 col = db_instance['crawler_metadata']
 """
-用于记录一个公众号的更新历史，更新日期、历史文章列表的加载次数（一次一般是10天的发文列表），文章总数
+Used to record the update history of a public account, the update date, 
+the number of loadings of the historical article list (one is usually a 10-day posting list), and the total number of articles
 """
 meta_data_scheme = {
-    "nickname"          : "",# 公众号昵称
+    "nickname"          : "",# Public Account Nickname
     "update_log_list"    : "",# date,deepth,article_num
 }
 
 
 def insert_article_metadata(nickname, update_log):
     """
-    :param nickname: 更新的公众号昵称
-    :param update_log: 更新详细日志
-    :return: 一个公众号占用一行记录
+    :param nickname: Updated public nickname
+    :param update_log: Update verbose log
+    :return: One public account occupies one line of records
     """
     metadata = col.find_one({'nickname':nickname})
     if type(metadata) is dict:
         metadata['update_log_list'].append(update_log)
         col.update_one({'nickname':nickname},{"$set":metadata})
-    # metadata不存在
+    # metadata does not exist
     else:
         metadata = copy(meta_data_scheme)
         metadata['nickname'] = nickname
@@ -30,9 +31,9 @@ def insert_article_metadata(nickname, update_log):
 
 def get_article_metadata(nickname=None, all=True):
     """
-    :param nickname:指定账号的日志 None为全部账号
-    :param all:True全部日志 False:最后一次更新日志
-    :return: 获取公众号文章平爬取的日志信息
+    :param nickname:Specify the account log None for all accounts
+    :param all:True all logs False: Last updated log
+    :return: Get the log information of the public account article flat crawl
     """
     data = {}
     metadata = []
@@ -49,15 +50,15 @@ def get_article_metadata(nickname=None, all=True):
 
 def delete_article_metadata(nickname):
     """
-    :param nickname: 公众号昵称
-    :return: 删除指定公众号的微信爬取日志信息
+    :param nickname: Public name nickname
+    :return: Delete the WeChat crawl log information of the specified public account
     """
     col.delete_one({'nickname':nickname})
 
 
 def update_history():
     """
-    :return:为此前通过手动爬取的文章创建metadata
+    :return:Create metadata by manually crawling articles for this before
     """
     from db import WeixinDB
     from datetime import datetime

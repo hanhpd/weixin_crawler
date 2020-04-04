@@ -5,24 +5,24 @@ from configs.crawler import adb_ports
 
 class GZHCrawler():
     """
-    只有一个实例对象，在设计模式中可以采用单例模式
-    接受一个公众号爬虫管理者实例作为参数
+    There is only one instance object, and singleton pattern can be used in design pattern
+    Accepts a public account crawler manager instance as a parameter
     """
     def __init__(self):
         self.gzh_task_rq = RQ('gzh_task_rq')
-        self.phone_adb_dbq = DBQ('phone_adb_ports','爬虫')
+        self.phone_adb_dbq = DBQ('phone_adb_ports','reptile')
         self.report_crawling_items = []
-        # 讲设置文件中的adb端口存入爬虫队列
+        # The adb port in the settings file is stored in the crawl queue
         for adb in adb_ports:
-            self.phone_adb_dbq.add_element({'id':adb,'nick_name':'未知','wxuin':'未知'})
+            self.phone_adb_dbq.add_element({'id':adb,'nick_name':'unknown','wxuin':'unknown'})
 
     def report_gzh_finished(self):
         """
-        :return:产生数据报告所有公众号的状态 名称 更新时间 等信息
+        :return:Generate data to report the status of all public accounts, name, update time, etc.
         [{nickname,article_num,update_time,update_num}{}{}]
-        report一次需要单独计算机每一个collection中的文档数量 优秀浪费时间 方法待改进
+        Report once requires the number of documents in each collection on a separate computer. Excellent waste of time. Method to be improved.
         """
-        # 获取mongdb中的公众号的状态
+        # Get the status of the public number in mongdb
         report = {}
         report_data = []
         from db.meta_data import get_article_metadata
@@ -45,13 +45,13 @@ class GZHCrawler():
 
     def _report_gzh_doing(self):
         """
-        :return:产生数据报告正在进行任务的公众号状态
-        数据来自任务队列 任务队列中存在的公众号和当前正在处理的公众号
+        :return:Generate data to report public account status of ongoing tasks
+        The data comes from the public number that exists in the task queue and the public number that is currently being processed
         nickname,percent,begin_time,need_time
         """
         report_data = []
         from tools.utils import dictstr_to_dict
-        # 队列中需要处理的公众号
+        # Public number to be processed in the queue
         gzh_need_todolist = self.gzh_task_rq.get_rq_data()
         for gzh in gzh_need_todolist:
             gzh_task = dictstr_to_dict(gzh)
@@ -76,7 +76,7 @@ class GZHCrawler():
 
     def report_gzh_doing(self):
         """
-        :return:当前可能并未任务
+        :return:May not be tasked
         """
         try:
             report_data = self._report_gzh_doing()
@@ -87,21 +87,21 @@ class GZHCrawler():
     def add_crawler(self,crawler):
         """
         :param self:
-        :return:添加爬虫
+        :return:Add crawler
         """
-        self.phone_adb_dbq.add_element({'id':crawler['phone'],'nick_name':'未知','wxuin':'未知'})
+        self.phone_adb_dbq.add_element({'id':crawler['phone'],'nick_name':'unknown','wxuin':'unknown'})
 
     def delete_crawler(self,crawler):
         """
         :param crawler:
-        :return:删除爬虫
+        :return:Remove crawler
         """
         print(crawler)
         self.phone_adb_dbq.delete_element({'id':crawler['phone']})
 
     def report_crawling(self,item,num=15):
         """
-        :param num: 日志条数
+        :param num: Number of logs
         :param item:{'nickname':**,'percent':'12/1231','speed':0.023,'title':'***'}
         :return:
         """
@@ -116,35 +116,35 @@ class GZHCrawler():
     def add_gzh(self,gzh):
         """
         :param gzh:
-        :return:添加公众号 到任务队列
+        :return:Add public number to task queue
         """
         self.gzh_task_rq.push(gzh)
 
     def delete_gzh(self,gzh):
         """
         :param gzh:
-        :return:删除公众号
+        :return:Delete public number
         """
         pass
 
     def update_gzh(self,gzh,n):
         """
         :param gzh:
-        :return: 更新公众号文章
+        :return: Update public account article
         """
         pass
 
     def gzh_report(self,gzh):
         """
         :param gzh:
-        :return:生成公众号历史文章数据报告
+        :return:Generate a public account historical article data report
         """
         pass
 
     def gzh_article_list(self,gzh):
         """
         :param gzh:
-        :return: 生成公众号的所有文章列表
+        :return: Generate a list of all articles in the public account
         """
         pass
 
@@ -152,17 +152,17 @@ class GZHCrawler():
         """
         :param gzh:
         :param field:
-        :return:公众号的指定字段到处到excel
+        :return:Public field designated excel everywhere
         """
         pass
 
     def run(self):
         """
-        :return:新加入的爬虫每当接到文章爬取任时就会自动获取请求参数
-        公众号爬虫的整个生命周期中都需要有一个后台进程监控公众的的爬取任务和更新任务
-        run需要在一个进程中不停执行
+        :return:The newly added crawler will automatically obtain the request parameters whenever it receives an article crawl task
+        The entire life cycle of the public account crawler needs a background process to monitor the public crawl and update tasks
+        run needs to be executed continuously in a process
         """
-        # 爬取任务
+        # Crawl task
         from tools.utils import dictstr_to_dict
         gzh_task = self.gzh_task_rq.pop()
         if gzh_task == []:
@@ -170,7 +170,7 @@ class GZHCrawler():
         gzh_task = dictstr_to_dict(gzh_task)
         self.gzh_in_service = gzh_task['nickname']
         print(gzh_task)
-        # 获取参数
+        # Get parameters
         adb_ports_raw = self.phone_adb_dbq.get_queue()
         adb_ports = []
         for adb in adb_ports_raw:
@@ -180,7 +180,7 @@ class GZHCrawler():
             wo.get_all_req_data(gzh_task['nickname'], hand=True)
         elif gzh_task['aom'] == 'auto':
             wo.get_all_req_data(gzh_task['nickname'], hand=False)
-        # 调用爬虫
+        # Call reptile
         from crawler import run_crawl
         config = int(gzh_task['range'])
         # from os import system

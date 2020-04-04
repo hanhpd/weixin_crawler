@@ -1,8 +1,8 @@
-# 中英文混合字符串抽取出汉字拼音首字母并保留所有的非汉字
+# Chinese and English mixed string to extract the first letters of Chinese characters and retain all non-Chinese characters
 def to_pinyin(ch_name):
     """
-    将混合转化为搜索拼音字符
-    INPUT '杭州frank1湖滨银泰in77'
+    Turn Blending into Searching for Pinyin Characters
+    INPUT 'Hangzhou frank1 lakeside Intime in77'
     OUTPUT 'hzfrank1hbytin77'
     """
     from pypinyin import lazy_pinyin
@@ -25,15 +25,15 @@ def to_pinyin_full(ch_name):
     from pypinyin import lazy_pinyin
     return '_'.join(lazy_pinyin(ch_name), )
 
-# 字符串到字典 支持自定义键值间隔符和成员间隔符
+# String to dictionary support for custom key-value spacers and member spacers
 def str_to_dict(s, join_symbol="\n", split_symbol=":"):
     """
-    key与value通过split_symbol连接， key,value 对之间使用join_symbol连接
-    例如： a=b&c=d   join_symbol是&, split_symbol是=
-    :param s: 原字符串
-    :param join_symbol: 连接符
-    :param split_symbol: 分隔符
-    :return: 字典
+    The key and value are connected by split_symbol, and the key and value pairs are connected by join_symbol
+    For example: a = b & c = d join_symbol is &, split_symbol is =
+    :param s: Original string
+    :param join_symbol: Joiner
+    :param split_symbol: Delimiter
+    :return: dictionary
     """
     s_list = s.split(join_symbol)
     data = dict()
@@ -44,19 +44,19 @@ def str_to_dict(s, join_symbol="\n", split_symbol=":"):
             data[k] = v.strip()
     return data
 
-# 字典转换为字符串
+# Dictionary to string
 def dict_to_str(data, join_symbol="&", split_symbol="="):
     s = ''
     for k in data:
         s += str(k)+split_symbol+str(data[k])+join_symbol
     return s[:-2]
 
-# 字符串转化为字典
+# String to dictionary
 def dictstr_to_dict(str_data):
     import ast
     return ast.literal_eval(str_data)
 
-# 配置日志打印格式
+# Configure log print format
 import logging
 from configs import LOGGING_LEVEL
 logging_level = {
@@ -74,7 +74,7 @@ logging.basicConfig(
     level=logging_level[LOGGING_LEVEL],
     datefmt='%d %H:%M:%S')
 
-#对齐打印且能通过depth控制打印深度
+#Align printing and control print depth through depth
 import pprint
 pp = pprint.PrettyPrinter(depth=3)
 debug_p = pp.pprint
@@ -84,6 +84,6 @@ def sub_list(whole_list, part_list):
     """
     :param whole_list:
     :param part_list:
-    :return:从whole list中找出除了part_list之外的元素 组成一个子list返回
+    :return:Find elements other than part_list from the whole list, form a sublist and return
     """
     return [x for x in whole_list if x not in part_list]

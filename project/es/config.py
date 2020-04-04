@@ -1,4 +1,4 @@
-# 需要在es中进行index 文档字段
+# Need to index the document fields in es
 doc_schema = {
     # "nickname":     {"type":"text","analyzer": "ik_max_word","search_analyzer": "ik_max_word"},
     "title":        {"type":"text","analyzer": "ik_max_word","search_analyzer": "ik_max_word"},
@@ -30,7 +30,7 @@ doc_schema = {
 }
 
 
-# 搜索body模板
+# Search body template
 search_template = {
     "query":{"match_all":{}},
     "from":0,

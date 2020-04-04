@@ -5,28 +5,28 @@ import numpy as np
 
 class VC(PhoneControl, OCR):
     """
-    根据给定的文字或位置信息执行屏幕点击动作 click_by_loc和click_by_words是最重要的连个对外接口
+    Click_by_loc and click_by_words are the most important external interfaces based on the given text or location information.
     """
     def __init__(self, phone):
         """
-        :param phone:adb 操作手机所需要的端口信息
+        :param phone:adb Port information needed to operate the phone
         """
-        # 一下写法不理解参考https://stackoverflow.com/questions/11179008/python-inheritance-typeerror-object-init-takes-no-parameters
+        # I don't understand the writing.Refer to https://stackoverflow.com/questions/11179008/python-inheritance-typeerror-object-init-takes-no-parameters
         PhoneControl.__init__(self,phone=phone)
 
     def click_by_words(self,words,tap=True):
         """
-        点击指定words所在的区域
-        :param words:目标文字
-        :return:实际点击的位置
+        Click on the area where the specified words are located
+        :param words:Target text
+        :return:Actual clicked position
         """
-        # 截图
+        # Screenshot
         pic_name = self.get_screen_cap()
-        # COR识别ui_words
+        # COR identifies ui_words
         ui_words = VC.ocr(pic_name ,location=True)
-        # 根据words找最相似
+        # Find the most similar based on words
         prob, loc_words = VC.find_position(ui_words, words)
-        # 执行点击
+        # Click
         loc = loc_words['location']
         pos = [loc['left'],loc['top'],loc['left']+loc['width'],loc['top']+loc['height']]
         if tap is True:
@@ -35,19 +35,19 @@ class VC(PhoneControl, OCR):
 
     def click_by_loc(self,pos):
         """
-        根据区域位置点击屏幕 同时支持 点位置
-        :param pos:区域左上角和右下角的坐标
+        Tap the screen according to the location of the area
+        :param pos:Upper-left and lower-right coordinates of the area
         :return:
         """
         acture_pos = self.input_tap(pos)
         return acture_pos
 
     def get_ui_words(self,location=False,in_str=False,crop=None):
-        # 截图
+        # Screenshot
         pic_name = self.get_screen_cap()
-        # COR识别ui_words
+        # COR identifies ui_words
         ui_words = VC.ocr(pic_name ,location=location, crop=crop)
-        # 如果不需要位置信息同时需要用一个字符串返回所有的ui界面字符
+        # If you don't need position information, you need to return all UI interface characters with a string
         if location==False and in_str==True:
             ui_words_str = ''
             for words in ui_words:
@@ -57,22 +57,22 @@ class VC(PhoneControl, OCR):
 
     def x_ray(self, keys, crop=None):
         """
-        根据给定的关键字返回它们的位置列表 并且给出相似度 大于0.9基本可信
+        Return a list of their positions according to the given keywords and give a similarity greater than 0.9
         :param keys:('key1','key2',...)
-        :param crop:聚焦裁剪区域 该tuple中信息为(left, upper, right, lower) 左上角为原点
+        :param crop:Focus cropping area The information in the tuple is (left, upper, right, lower) The upper left corner is the origin
         :return:{'key1':{'pos':[x1,y1,x2,y2],'prob':0.998},'key1':{'pos':[x1,y1,x2,y2],'prob':0.998},...}
         """
         x_ray_data = {}
-        # 截图
+        # Screenshot
         pic_name = self.get_screen_cap()
-        # 获取图片的ui_words
+        # Get ui_words of pictures
         ui_words = VC.ocr(pic_name ,location=True, crop=crop)
         for key in keys:
             x_ray_data[key] = {}
-            # 找到最相似words
+            # Find most similar words
             prob, loc_words = VC.find_position(ui_words, key)
             loc = loc_words['location']
-            # 长宽转化为右下角坐标
+            # Length and width are converted to the lower right corner coordinates
             pos = [loc['left'],loc['top'],loc['left']+loc['width'],loc['top']+loc['height']]
             x_ray_data[key]['pos'] = pos
             x_ray_data[key]['prob'] = prob
@@ -81,9 +81,9 @@ class VC(PhoneControl, OCR):
     @staticmethod
     def ui_words2vocb(ui_words):
         """
-        根据截屏文字信息获得词典用于接下来创建one_hot向量
-        :param ui_words:来自ocr结果
-        :return:字典 暂时为未添加停用词
+        Get dictionary based on screenshot text information for next creation of one_hot vector
+        :param ui_words:Results from ocr
+        :return:Dictionary for now without stop words
         """
         vocab = ''
         for words in ui_words:
@@ -94,18 +94,18 @@ class VC(PhoneControl, OCR):
     @staticmethod
     def find_position(ui_words, dest_words):
         """
-        根据cor识别的ui_words，找到与指定目标dest_words最相似的位置
+        According to the ui_words identified by cor, find the location most similar to the specified target dest_words
         :param ui_words:
         :param dest_words:
-        :return:第一个返回值为相似度，第二个返回值为对应的ocr信息，包含文本和位置信息
-        0.998, {'location': {'width': 119, 'top': 1863, 'left': 345, 'height': 40}, 'words': '通讯录'}
+        :return:The first return value is the similarity, and the second return value is the corresponding OCR information, including text and location information.
+        0.998, {'location': {'width': 119, 'top': 1863, 'left': 345, 'height': 40}, 'words': 'Address book'}
         """
         vocab = VC.ui_words2vocb(ui_words)
         dictionary = list(vocab)
         vec_len = len(dictionary)
         keys = range(vec_len)
         dictionary = dict(zip(dictionary, keys))
-        # 计算当ui界面每一行words的one-hot向量
+        # Calculate the one-hot vector of words in each row of the UI interface
         ui_words_vec = []
         for words in ui_words:
             words_vec = np.zeros(vec_len)
@@ -114,26 +114,26 @@ class VC(PhoneControl, OCR):
             ui_words_vec.append(words_vec)
         ui_words_vec = np.array(ui_words_vec)
 
-        # 根据词典计算机目标words的one-hot词向量
+        # One-hot word vector based on dictionary computer target words
         dest_words_vec = np.zeros(vec_len)
         for word in dest_words:
             if word not in dictionary:continue
             dest_words_vec[dictionary[word]]+=1
 
-        #计算余弦夹角
+        #Calculate cosine angle
         cos_sim = []
         for vec in ui_words_vec:
             cs = VC.cos_sim(dest_words_vec,vec)
             cos_sim.append(cs)
 
-        #寻找最可能点击位置
+        #Finding the most likely click locations
         max_index = cos_sim.index(max(cos_sim))
         return cos_sim[max_index], ui_words[max_index]
 
     @staticmethod
     def cos_sim(a,b):
         """
-        计算两个向量的余弦相似性，结果越接近1越相似
+        Calculate the cosine similarity of two vectors, the closer the result is to 1, the more similar
         :param a:
         :param b:
         :return:

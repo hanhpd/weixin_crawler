@@ -1,44 +1,44 @@
-# OCR 没有识别到任何结果返回参数
+# OCR did not recognize any result return parameters
 OCR_NO_WORDS = []
 
-# Android按键事件
+# Android key events
 KEY={
     'BACK_KEYEVENT' : '4',
     'HOME_KEYEVENT' : '3',
 }
 
-# 微信位置信息
+# WeChat location information
 BTN={
-    # 微信主界面底部4个按钮
+    # 4 buttons at the bottom of WeChat main interface
     'WEIXIN_BTN' : (120,1800,200,1900),
     'TONGXUNLU_BTN' : (380,1800,460,1900),
     'FAXIAN_BTN' : (620,1800,700,1900),
     'WO_BTN' : (920,1800,1000,1900),
-    # 公众号文件夹列表
+    # Public account folder list
     'GZH_FOLDER':(0,640,900,750),
-    # 搜索公众号的第一个结果
+    # Search for the first result of the public number
     'FIRST_GZH_SEARCH_RESULT':(34,225,900,330),
-    # 所有关注公众号列表右上角2个按钮
+    # 2 buttons in the upper right corner of all public account list
     'SEARCH_BTN' : (800,120,860,200),
     'ADD_BTN' : (950,100,1020,200),
-    # 公众号详情按钮
+    # Public account details button
     'PROFILE_BTN' : (950,100,1020,200),
-    # 更多按钮
+    # More buttons
     'MORE_BTN' : (950,100,1020,200),
     'CLAIRE_WEIXIN' : (130,1350,200,1400),
-    #每个模拟器统一位置
+    #Uniform location for each simulator
     'EMU_WEIXIN_ICON':(920,670,1000,750),
-    # 根据拼音搜索公众号的第一个结果位置
+    # Search for the first result of the public number based on pinyin
     'FIRST_RESULT':(200,220,800,350),
-    # 证书提示继续钮位置
+    # Certificate prompt continue button position
     'CAR_NOTE_CONTINUE':(780,1200,900,1250),
-    # 公众号全部消息按键
+    # Public account all message button
     'ALL_HISTORY_MSG':(34,1720,1024,1800),
-    # 允许使用地理位置确认按钮
+    # Allow location confirmation button
     'ASK_FOR_LOCATION':(780,1150,860,1180),
-    # 写了留言按钮
+    # Wrote a message button
     'LEAVE_MSG':(480,1770,580,1790),
-    # 由于标题行数不同确认留言位置也不同 索性点击三次
+    # Due to the different number of title lines, the confirmation message location is also different. Simply click three times.
     'CONFIRM_MSG1':(120,760,940,850),
     'CONFIRM_MSG2':(120,830,940,920),
     'CONFIRM_MSG3':(120,900,940,990),
@@ -52,8 +52,8 @@ CROP_RANGE = {
 }
 
 UI_WORDS = {
-    'CAR_NOTE':'该网站的安全证书存在问题',
-    'NO_LEAVING_MSG':'写留言',
+    'CAR_NOTE':'There is a problem with the siteof security certificate',
+    'NO_LEAVING_MSG':'Write a message',
 }
 
 PHONE = {

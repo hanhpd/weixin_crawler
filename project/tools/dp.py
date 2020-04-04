@@ -1,6 +1,6 @@
 class Singleton(object):
     """
-    抽象单例
+    Abstract singleton
     """
     def __new__(cls, *args, **kw):
         if not hasattr(cls, '_instance'):

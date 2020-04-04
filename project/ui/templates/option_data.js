@@ -1,23 +1,23 @@
-//累计发文总数
+//Cumulative Total Posts
 document.getElementById('total_posts_num').innerHTML = '{{ data.account_name }}'+'{{ data.posts_info }}'
 
 
-// 历史主文章的发布时间/阅读量/点赞量/赞赏量/评论量
+// Release time of historical main articles / views / likes / comments / comments
 echarts.init(document.getElementById('all_mian_date_read')).setOption({{ data.all_mian_date_read }})
 
-// 主副文章统计数据
+// Primary and secondary article statistics
 echarts.init(document.getElementById('all_statistic')).setOption({{ data.all_statistic }})
 
-// 分别统计不同主副/小时/星期文章发文数量
+// Count the number of articles published by different main / secondary / hour / week separately
 echarts.init(document.getElementById('dir_posts_num_related_mov')).setOption({{ data.dir_posts_num_related.mov }})
 echarts.init(document.getElementById('dir_posts_num_related_hour')).setOption({{ data.dir_posts_num_related.hour }})
 echarts.init(document.getElementById('dir_posts_num_related_week')).setOption({{ data.dir_posts_num_related.week }})
 
-//阅读量分别和点赞量/上一次阅读量之间的关系
+//The relationship between reading volume and likes / last reading volume
 echarts.init(document.getElementById('read_vs_like')).setOption({{ data.read_vs_factors.like }})
 echarts.init(document.getElementById('read_vs_pre_read')).setOption({{ data.read_vs_factors.pre_read }})
 
-// 探索最佳推文小时 推文星期 标题词数 插图数量 视频数量
+// Explore the best tweet hours Tweet week Number of titles Number of illustrations Number of videos
 echarts.init(document.getElementById('read_vs_hour')).setOption({{ data.find_best_factors.hour }})
 echarts.init(document.getElementById('read_vs_week')).setOption({{ data.find_best_factors.week }})
 echarts.init(document.getElementById('read_vs_title')).setOption({{ data.find_best_factors.title }})
@@ -30,11 +30,11 @@ echarts.init(document.getElementById('read_vs_video')).setOption({{ data.find_be
 <table class="w3-table w3-striped w3-white">
     <thead>
         <tr>
-            <th scope="col">序号</th>
-            <th scope="col">阅读量</th>
-            <th scope="col">点赞量</th>
-            <th scope="col">标题</th>
-            <th scope="col">发文日期</th>
+            <th scope="col">Serial number</th>
+            <th scope="col">Reading</th>
+            <th scope="col">Likes</th>
+            <th scope="col">title</th>
+            <th scope="col">Post date</th>
             <th scope="col">{{ table_data.attribute }}</th>
         </tr>
     </thead>
@@ -53,15 +53,15 @@ echarts.init(document.getElementById('read_vs_video')).setOption({{ data.find_be
 </table>
 `
 {%- endmacro %}
-// 表9 100001除外阅读来那个最高的10篇文章
+// Table 9 Except 100001 Read the top 10 articles
 document.getElementById('particular_most_read_10_except_100001').innerHTML = {{ table_list(data.table.particular_most_read_10_except_100001) }}
-// 表10 阅读量最低且为非0的10篇文章
+// Table 10 The 10 most read and non-zero articles
 document.getElementById('particular_least_read_10_except_0').innerHTML = {{ table_list(data.table.particular_least_read_10_except_0) }}
-// 表11 深度指数最高的10篇文章
+// Table 11 The 10 articles with the highest depth index
 document.getElementById('particular_most_deep_10').innerHTML = {{ table_list(data.table.particular_most_deep_10) }}
-// 表12 深度指数最低的10篇文章
+// Table 12 The 10 articles with the lowest depth index
 document.getElementById('particular_least_deep_10').innerHTML = {{ table_list(data.table.particular_least_deep_10) }}
-// 表13 落差指数最低的10篇文章
+// Table 13 The 10 articles with the lowest drop index
 document.getElementById('particular_least_fall_10').innerHTML = {{ table_list(data.table.particular_least_fall_10) }}
-// 表14 所有的100001文章
+// Table 14 All 100001 Articles
 document.getElementById('particular_all_10001').innerHTML = {{ table_list(data.table.particular_all_10001) }}

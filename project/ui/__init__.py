@@ -3,11 +3,11 @@ from Application.gzh_category import GZHCategory
 from Application.gzh_crawler import GZHCrawler
 from es.setting import  GZHSearchSetting
 
-# 公众号爬虫应用实例
+# Public account crawler application example
 gc = GZHCrawler()
-# 公众号类别管理实例 主要服务于定向搜索
+# Public account category management example Mainly serves targeted search
 gzh_category = GZHCategory()
-# 搜索设置实例 主要服务于对搜索行为的设置
+# Search setting example Mainly serves the setting of search behavior
 gzh_setting = GZHSearchSetting()
 
 
@@ -17,12 +17,12 @@ def run_webserver():
 def run_gzh_crawler():
     import time
     while True:
-        # 增加时间等待防止CPU使用率过高
+        # Increase time to prevent high CPU usage
         time.sleep(1)
         gc.run()
 
 
-# 延迟import是为了防止递归import
+# Delay import to prevent recursive import
 from ui.router import *
 from ui.event import *
 
